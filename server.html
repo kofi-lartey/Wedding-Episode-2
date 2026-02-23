@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jessica & Kelvin - Wedding</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="https://cdn=" stylesheet" href.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+        }
+
+        @keyframes spinSlow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse-soft {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .animate-spin-slow {
+            animation: spinSlow 20s linear infinite;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .animate-fade-in-scale {
+            animation: fadeInScale 0.6s ease-out forwards;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .animate-pulse-soft {
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
+
+        /* Staggered animation delays */
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+
+        .delay-500 {
+            animation-delay: 0.5s;
+        }
+
+        /* Page transitions */
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page.exit {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+
+        /* Navigation link hover effect */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #000;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Card hover effects */
+        .card-hover {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button hover animation */
+        .btn-hover {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-hover:hover::before {
+            left: 100%;
+        }
+
+        /* Image hover zoom */
+        .img-zoom {
+            transition: transform 0.6s ease;
+        }
+
+        .group:hover .img-zoom {
+            transform: scale(1.08);
+        }
+
+        /* Form input focus animation */
+        .input-focus {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-focus:focus {
+            border-color: #f59e0b;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+
+        /* Slider Background */
+        .bg-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .bg-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 0;
+        }
+
+        /* Stagger children animations on page load */
+        .page.active .stagger-item {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .page.active .stagger-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .page.active .stagger-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .page.active .stagger-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .page.active .stagger-item:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .page.active .stagger-item:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+    </style>
+</head>
+
+<body class="md:px-16 py-10">
+
+    <div class="bg-white p-4 md:px-8 rounded-3xl max-w-6xl mx-auto mb-10 shadow-lg">
+
+        <div class="flex justify-between items-center text-[10px] tracking-[2px] uppercase text-gray-500">
+
+            <div class="flex items-center gap-8">
+                <div class="text-2xl font-semibold tracking-tighter text-gray-900 cursor-pointer"
+                    onclick="showPage('home')">
+                    JK
+                </div>
+
+                <div class="hidden md:flex gap-6">
+                    <a href="#" onclick="showPage('home')" class="hover:text-black transition-colors">Our Story</a>
+                    <a href="#" onclick="showPage('photos')" class="hover:text-black transition-colors">Photos Album</a>
+                    <a href="#" onclick="showPage('contact')" class="hover:text-black transition-colors">Contact</a>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="#" onclick="showPage('direction')"
+                    class="hidden md:block hover:text-black transition-colors font-medium">
+                    Direction &rarr;
+                </a>
+
+                <button id="hamburgerBtn" class="md:hidden p-2" onclick="toggleMobileMenu()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page (Our Story) -->
+    <div id="mobileMenu"
+        class="hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center gap-8 text-xl tracking-wider">
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 p-2"><svg xmlns="http://www.w3.org/2000/svg"
+                class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg> </button> <a href="#" onclick="showPage('home'); toggleMobileMenu()"
+            class="hover:text-amber-500 transition">Our Story</a> <a href="#"
+            onclick="showPage('photos'); toggleMobileMenu()" class="hover:text-amber-500 transition">Photos Album</a>
+        <a href="#" onclick="showPage('direction'); toggleMobileMenu()"
+            class="hover:text-amber-500 transition">Direction</a> <a href="#"
+            onclick="showPage('contact'); toggleMobileMenu()" class="hover:text-amber-500 transition">Contact</a>
+    </div> <!-- Home Page (Our Story) -->
+
+    <div id="home" class="page active px-4 md:px-0">
+        <div class="text-center mb-12 lg:hidden">
+            <h1 class="text-5xl leading-none text-gray-200 font-extralight tracking-tighter italic">The Wedding</h1>
+            <p class="text-[10px] tracking-[4px] text-gray-400 uppercase mt-2">Our Journey Together</p>
+        </div>
+
+        <div class="flex flex-col lg:grid lg:grid-cols-4 gap-12 lg:gap-4 items-start">
+
+            <div class="hidden lg:flex lg:col-span-1 sticky top-10 flex-col gap-10">
+                <div class="relative group cursor-default">
+                    <h1
+                        class="text-[100px] leading-[0.8] text-gray-100 font-black absolute -left-4 -top-4 transition-all group-hover:text-gray-200">
+                        STORY</h1>
+                    <div class="relative z-10 pl-2">
+                        <h2 class="text-4xl font-light text-gray-900 tracking-tighter">CHAPTERS <br /> OF US</h2>
+                        <div class="w-12 h-[2px] bg-amber-200 mt-4"></div>
+                    </div>
+                </div>
+
+                <div class="relative w-48 h-48 group">
+                    <div
+                        class="absolute inset-0 bg-amber-50 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 ease-out">
+                    </div>
+                    <svg viewBox="0 0 200 200" class="w-full h-full animate-spin-slow relative z-10">
+                        <path id="circlePathUnique" d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+                            fill="transparent" />
+                        <text font-size="11" fill="#9CA3AF" letter-spacing="5" class="uppercase font-light">
+                            <textPath href="#circlePathUnique">RESERVE THE DATE • JUNE 2026 •</textPath>
+                        </text>
+                    </svg>
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-2xl transition-transform group-hover:rotate-12">
+                        <img src="https://i.pinimg.com/736x/79/5b/af/795baf458a66bc7adc984c0220832ec0.jpg"
+                            class="w-full h-full object-cover" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:col-span-3 grid md:grid-cols-3 gap-16 md:gap-8 lg:gap-12">
+
+                <div class="group relative">
+                    <div
+                        class="relative overflow-hidden rounded-t-[180px] rounded-b-3xl aspect-[3/4] bg-gray-100 shadow-2xl">
+                        <img src="https://i.pinimg.com/736x/79/5b/af/795baf458a66bc7adc984c0220832ec0.jpg"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0" />
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                            <span class="text-xs tracking-[4px] mb-2">CHAPTER ONE</span>
+                            <h4 class="text-xl font-light">The First Glance</h4>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute -bottom-6 -right-4 w-24 h-24 backdrop-blur-md bg-white/80 rounded-full flex items-center justify-center shadow-lg border border-white/50 z-20 transition-transform group-hover:-translate-y-4">
+                        <span class="text-4xl font-extralight text-gray-300">01</span>
+                    </div>
+
+                    <div class="mt-10 px-2">
+                        <p class="text-[9px] tracking-[4px] text-amber-600 font-bold mb-1 uppercase">24.06.2017</p>
+                        <h3 class="text-lg font-medium text-gray-800 tracking-tight">The Day We Met</h3>
+                    </div>
+                </div>
+
+                <div class="group relative md:mt-12">
+                    <div
+                        class="relative overflow-hidden rounded-t-[180px] rounded-b-3xl aspect-[3/4] bg-gray-100 shadow-2xl">
+                        <img src="https://i.pinimg.com/1200x/a2/99/21/a29921158f93d592e1ed30ad30554351.jpg"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                            <span class="text-xs tracking-[4px] mb-2">CHAPTER TWO</span>
+                            <h4 class="text-xl font-light">Shared Dreams</h4>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute -bottom-6 -right-4 w-24 h-24 backdrop-blur-md bg-white/80 rounded-full flex items-center justify-center shadow-lg border border-white/50 z-20 transition-transform group-hover:-translate-y-4">
+                        <span class="text-4xl font-extralight text-gray-300">02</span>
+                    </div>
+                    <div class="mt-10 px-2">
+                        <p class="text-[9px] tracking-[4px] text-amber-600 font-bold mb-1 uppercase">12.07.2019</p>
+                        <h3 class="text-lg font-medium text-gray-800 tracking-tight">Stories Opening</h3>
+                    </div>
+                </div>
+
+                <div class="group relative">
+                    <div
+                        class="relative overflow-hidden rounded-t-[180px] rounded-b-3xl aspect-[3/4] bg-gray-100 shadow-2xl">
+                        <img src="https://i.pinimg.com/736x/20/da/47/20da475d43cb52fb7573964c591d3064.jpg"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0" />
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                            <span class="text-xs tracking-[4px] mb-2">CHAPTER THREE</span>
+                            <h4 class="text-xl font-light">The Promise</h4>
+                        </div>
+                    </div>
+                    <div
+                        class="absolute -bottom-6 -right-4 w-24 h-24 backdrop-blur-md bg-white/80 rounded-full flex items-center justify-center shadow-lg border border-white/50 z-20 transition-transform group-hover:-translate-y-4">
+                        <span class="text-4xl font-extralight text-gray-300">03</span>
+                    </div>
+                    <div class="mt-10 px-2">
+                        <p class="text-[9px] tracking-[4px] text-amber-600 font-bold mb-1 uppercase">19.05.2026</p>
+                        <h3 class="text-lg font-medium text-gray-800 tracking-tight">The Next Journey</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Photos Page -->
+    <div id="photos" class="page">
+        <div class="relative min-h-screen w-full overflow-hidden mb-10">
+            <div class="swiper bg-slider absolute inset-0">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc"
+                            class="w-full h-full object-cover" /></div>
+                    <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed"
+                            class="w-full h-full object-cover" /></div>
+                </div>
+            </div>
+            <div class="bg-overlay"></div>
+
+            <div class="grid lg:grid-cols-4 items-center gap-10 relative z-10 py-10 px-4">
+                <div class="lg:col-span-1 flex flex-col items-start gap-12">
+                    <div class="flex flex-col space-y-1">
+                        <h1 class="text-[55px] md:text-[80px] leading-[0.85] text-gray-800 font-light tracking-tighter">
+                            JESSICA</h1>
+                        <h1 class="text-[30px] md:text-[40px] leading-[0.85] text-gray-400 font-serif italic py-2">&
+                        </h1>
+                        <h1 class="text-[55px] md:text-[80px] leading-[0.85] text-gray-800 font-light tracking-tighter">
+                            KELVIN</h1>
+                    </div>
+
+                    <div class="relative w-44 h-44 animate-spin-slow">
+                        <svg viewBox="0 0 200 200" class="w-full h-full">
+                            <defs>
+                                <path id="circlePathAlbum"
+                                    d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0" />
+                            </defs>
+                            <text font-size="12" fill="#1f2937" letter-spacing="5" class="uppercase font-medium">
+                                <textPath href="#circlePathAlbum">THE PHOTO ALBUM â€¢ THE PHOTO ALBUM â€¢</textPath>
+                            </text>
+                        </svg>
+                        <img src="https://i.pinimg.com/736x/b7/c5/c6/b7c5c6cf4e00fa5a166b696f93e8f315.jpg"
+                            class="absolute top-1/2 left-1/2 w-24 h-24 -translate-x-1/2 -translate-y-1/2 rounded-full object-cover border-2 border-white shadow-md" />
+                    </div>
+                </div>
+
+                <div class="lg:col-span-3 grid md:grid-cols-3 gap-10 text-center">
+                    <div class="group">
+                        <div class="relative flex justify-center">
+                            <div class="overflow-hidden rounded-lg h-[450px] w-full shadow-lg">
+                                <img src="https://i.pinimg.com/736x/79/5b/af/795baf458a66bc7adc984c0220832ec0.jpg"
+                                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-1000 group-hover:scale-105" />
+                            </div>
+                            <div
+                                class="absolute -bottom-8 left-6 text-7xl md:text-8xl text-white font-extralight drop-shadow-md">
+                                01.</div>
+                        </div>
+                        <div class="w-px h-14 bg-gray-300 mx-auto mt-2"></div>
+                        <p class="text-[11px] tracking-[4px] text-gray-400 mt-6 uppercase">Gallery One</p>
+                        <h3 class="text-lg mt-1 tracking-widest font-light">SWEET MOMENTS</h3>
+                    </div>
+
+                    <div class="group">
+                        <div class="relative flex justify-center">
+                            <div class="overflow-hidden rounded-lg h-[450px] w-full shadow-lg">
+                                <img src="https://i.pinimg.com/1200x/a2/99/21/a29921158f93d592e1ed30ad30554351.jpg"
+                                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-1000 group-hover:scale-105" />
+                            </div>
+                            <div
+                                class="absolute -bottom-8 left-6 text-7xl md:text-8xl text-white font-extralight drop-shadow-md">
+                                02.</div>
+                        </div>
+                        <div class="w-px h-14 bg-gray-300 mx-auto mt-2"></div>
+                        <p class="text-[11px] tracking-[4px] text-gray-400 mt-6 uppercase">Gallery Two</p>
+                        <h3 class="text-lg mt-1 tracking-widest font-light">TRUE HAPPINESS</h3>
+                    </div>
+
+                    <div class="group">
+                        <div class="relative flex justify-center">
+                            <div class="overflow-hidden rounded-lg h-[450px] w-full shadow-lg">
+                                <img src="https://i.pinimg.com/736x/b7/c5/c6/b7c5c6cf4e00fa5a166b696f93e8f315.jpg"
+                                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-1000 group-hover:scale-105" />
+                            </div>
+                            <div
+                                class="absolute -bottom-8 left-6 text-7xl md:text-8xl text-white font-extralight drop-shadow-md">
+                                03.</div>
+                        </div>
+                        <div class="w-px h-14 bg-gray-200 mx-auto mt-2"></div>
+                        <p class="text-[11px] tracking-[4px] text-gray-400 mt-6 uppercase">Gallery Three</p>
+                        <h3 class="text-lg mt-1 tracking-widest font-light">FOREVER TOGETHER</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact" class="page px-4 md:px-0">
+        <div class="text-center mb-12 lg:hidden">
+            <h1 class="text-5xl leading-none text-gray-200 font-extralight tracking-tighter italic">RSVP</h1>
+            <p class="text-[10px] tracking-[4px] text-gray-400 uppercase mt-2">Kindly Respond</p>
+        </div>
+
+        <div class="flex flex-col lg:grid lg:grid-cols-4 gap-12 lg:gap-4 items-start">
+
+            <div class="flex lg:col-span-1 lg:sticky lg:top-10 flex-col items-center lg:items-start gap-10">
+                <div class="hidden lg:block relative group cursor-default">
+                    <h1
+                        class="text-[100px] leading-[0.8] text-gray-100 font-black absolute -left-4 -top-4 transition-all group-hover:text-gray-200 uppercase">
+                        RSVP</h1>
+                    <div class="relative z-10 pl-2">
+                        <h2 class="text-4xl font-light text-gray-900 tracking-tighter uppercase">GET IN <br /> TOUCH
+                        </h2>
+                        <div class="w-12 h-[2px] bg-amber-200 mt-4"></div>
+                    </div>
+                </div>
+
+                <div class="relative w-40 h-40 md:w-48 md:h-48 group">
+                    <div
+                        class="absolute inset-0 bg-amber-50 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 ease-out">
+                    </div>
+                    <svg viewBox="0 0 200 200" class="w-full h-full animate-spin-slow relative z-10">
+                        <path id="circlePathContact" d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+                            fill="transparent" />
+                        <text font-size="11" fill="#9CA3AF" letter-spacing="5" class="uppercase font-light">
+                            <textPath href="#circlePathContact">SEND US A MESSAGE • KINDLY RESPOND •</textPath>
+                        </text>
+                    </svg>
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-amber-100 group-hover:rotate-12 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="w-full lg:col-span-3 flex flex-col md:flex-row gap-0 rounded-[40px] overflow-hidden shadow-2xl bg-white border border-gray-100">
+
+                <div class="w-full md:w-1/3 bg-gray-50 p-10 flex flex-col justify-between relative overflow-hidden">
+                    <div class="relative z-10">
+                        <h3 class="text-xs tracking-[4px] text-amber-600 font-bold uppercase mb-4">Registry & Gifts</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed font-light">
+                            Your presence is our greatest gift, but if you wish to honor us with a contribution, we have
+                            a registry available.
+                        </p>
+                        <a href="#"
+                            class="inline-block mt-4 text-[10px] tracking-[2px] uppercase border-b border-amber-200 pb-1 hover:border-amber-500 transition-colors">View
+                            Registry</a>
+                    </div>
+
+                    <div class="mt-12 relative z-10">
+                        <h3 class="text-xs tracking-[4px] text-amber-600 font-bold uppercase mb-4">Deadline</h3>
+                        <p class="text-2xl font-extralight text-gray-800 tracking-tighter">May 01, 2026</p>
+                    </div>
+
+                    <span
+                        class="absolute -bottom-10 -left-10 text-[180px] font-black text-gray-100/50 leading-none select-none">@</span>
+                </div>
+
+                <div class="w-full md:w-2/3 p-8 md:p-16">
+                    <header class="mb-10">
+                        <h2 class="text-3xl font-light text-gray-800 tracking-tight">Send Us Your Wishes</h2>
+                        <p class="text-gray-400 text-sm mt-2">Whether you can make it or not, we'd love to hear from
+                            you.</p>
+                    </header>
+
+                    <form class="space-y-8" onsubmit="event.preventDefault(); alert('Message sent with love!');">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="group relative">
+                                <label
+                                    class="text-[10px] uppercase tracking-[3px] text-gray-400 transition-colors group-focus-within:text-amber-500">Full
+                                    Name</label>
+                                <input type="text" placeholder="John Doe"
+                                    class="w-full border-b border-gray-100 py-3 bg-transparent text-gray-800 focus:outline-none focus:border-amber-300 transition-all placeholder-gray-200" />
+                            </div>
+                            <div class="group relative">
+                                <label
+                                    class="text-[10px] uppercase tracking-[3px] text-gray-400 transition-colors group-focus-within:text-amber-500">Email</label>
+                                <input type="email" placeholder="hello@example.com"
+                                    class="w-full border-b border-gray-100 py-3 bg-transparent text-gray-800 focus:outline-none focus:border-amber-300 transition-all placeholder-gray-200" />
+                            </div>
+                        </div>
+
+                        <div class="group relative">
+                            <label
+                                class="text-[10px] uppercase tracking-[3px] text-gray-400 transition-colors group-focus-within:text-amber-500">Attendance</label>
+                            <select
+                                class="w-full border-b border-gray-100 py-3 bg-transparent text-gray-800 focus:outline-none focus:border-amber-300 transition-all appearance-none cursor-pointer">
+                                <option value="yes">Happily Accepting</option>
+                                <option value="no">Regretfully Declining</option>
+                                <option value="maybe">Still Checking Calendar</option>
+                            </select>
+                        </div>
+
+                        <div class="group relative">
+                            <label
+                                class="text-[10px] uppercase tracking-[3px] text-gray-400 transition-colors group-focus-within:text-amber-500">Message</label>
+                            <textarea rows="3" placeholder="Share a memory or a wish..."
+                                class="w-full border-b border-gray-100 py-3 bg-transparent text-gray-800 focus:outline-none focus:border-amber-300 transition-all resize-none placeholder-gray-200"></textarea>
+                        </div>
+
+                        <div class="pt-6">
+                            <button type="submit"
+                                class="group relative flex items-center gap-4 text-xs font-bold uppercase tracking-[4px] text-gray-800">
+                                <span class="relative z-10">Send Message</span>
+                                <div
+                                    class="w-12 h-12 rounded-full border border-amber-200 flex items-center justify-center group-hover:bg-amber-400 group-hover:border-amber-400 transition-all duration-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="direction" class="page px-4 md:px-0">
+        <div class="text-center mb-12 lg:hidden">
+            <h1 class="text-5xl leading-none text-gray-200 font-extralight tracking-tighter italic">The Venues</h1>
+            <p class="text-[10px] tracking-[4px] text-gray-400 uppercase mt-2">Where & When</p>
+        </div>
+
+        <div class="flex flex-col lg:grid lg:grid-cols-4 gap-12 lg:gap-4 items-start">
+
+            <div class="flex lg:col-span-1 lg:sticky lg:top-10 flex-col items-center lg:items-start gap-10">
+                <div class="hidden lg:block relative group cursor-default">
+                    <h1
+                        class="text-[100px] leading-[0.8] text-gray-100 font-black absolute -left-4 -top-4 transition-all group-hover:text-gray-200 uppercase">
+                        Path</h1>
+                    <div class="relative z-10 pl-2">
+                        <h2 class="text-4xl font-light text-gray-900 tracking-tighter uppercase">Join Our <br />
+                            Celebration</h2>
+                        <div class="w-12 h-[2px] bg-amber-200 mt-4"></div>
+                    </div>
+                </div>
+
+                <div class="relative w-40 h-40 md:w-48 md:h-48 group">
+                    <div
+                        class="absolute inset-0 bg-amber-50 rounded-full scale-0 group-hover:scale-100 transition-transform duration-700 ease-out">
+                    </div>
+                    <svg viewBox="0 0 200 200" class="w-full h-full animate-spin-slow relative z-10">
+                        <path id="circlePathDirection" d="M 100,100 m -75,0 a 75,75 0 1,1 150,0 a 75,75 0 1,1 -150,0"
+                            fill="transparent" />
+                        <text font-size="11" fill="#9CA3AF" letter-spacing="5" class="uppercase font-light">
+                            <textPath href="#circlePathDirection">VIEW ON GOOGLE MAPS • VIEW ON GOOGLE MAPS •</textPath>
+                        </text>
+                    </svg>
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 md:w-24 md:h-24 bg-white rounded-full flex items-center justify-center shadow-xl border border-amber-100 group-hover:rotate-12 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-amber-500" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:col-span-3 grid md:grid-cols-2 gap-16 md:gap-10">
+
+                <div class="group relative md:mt-0">
+                    <div
+                        class="relative overflow-hidden rounded-t-[180px] rounded-b-3xl aspect-[4/5] bg-gray-100 shadow-2xl">
+                        <img src="https://i.pinimg.com/736x/79/5b/af/795baf458a66bc7adc984c0220832ec0.jpg"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0" />
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                            <p class="text-xs tracking-[4px] mb-2 uppercase">Part One</p>
+                            <h4 class="text-2xl font-light">The Exchange of Vows</h4>
+                            <a href="https://maps.google.com" target="_blank"
+                                class="mt-4 inline-flex items-center gap-2 text-[10px] tracking-[2px] uppercase border-b border-white/40 pb-1 w-fit hover:border-white transition-all">Open
+                                Maps &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute -bottom-6 -right-4 w-24 h-24 backdrop-blur-md bg-white/80 rounded-full flex flex-col items-center justify-center shadow-lg border border-white/50 z-20 transition-transform group-hover:-translate-y-4">
+                        <span class="text-xs font-bold text-amber-600 uppercase">2:00</span>
+                        <span class="text-[9px] text-gray-400 uppercase tracking-widest">PM</span>
+                    </div>
+
+                    <div class="mt-10 px-2">
+                        <p class="text-[9px] tracking-[4px] text-amber-600 font-bold mb-1 uppercase">Ceremony</p>
+                        <h3 class="text-xl font-medium text-gray-800 tracking-tight">St. Mary's Church</h3>
+                        <p class="text-gray-500 text-sm mt-2 font-light">123 Church Street, City Center</p>
+                    </div>
+                </div>
+
+                <div class="group relative md:mt-24">
+                    <div
+                        class="relative overflow-hidden rounded-t-[180px] rounded-b-3xl aspect-[4/5] bg-gray-100 shadow-2xl">
+                        <img src="https://i.pinimg.com/736x/b7/c5/c6/b7c5c6cf4e00fa5a166b696f93e8f315.jpg"
+                            class="w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 grayscale group-hover:grayscale-0" />
+
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
+                            <p class="text-xs tracking-[4px] mb-2 uppercase">Part Two</p>
+                            <h4 class="text-2xl font-light">Dinner & Dancing</h4>
+                            <a href="https://maps.google.com" target="_blank"
+                                class="mt-4 inline-flex items-center gap-2 text-[10px] tracking-[2px] uppercase border-b border-white/40 pb-1 w-fit hover:border-white transition-all">Open
+                                Maps &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute -bottom-6 -right-4 w-24 h-24 backdrop-blur-md bg-white/80 rounded-full flex flex-col items-center justify-center shadow-lg border border-white/50 z-20 transition-transform group-hover:-translate-y-4">
+                        <span class="text-xs font-bold text-amber-600 uppercase">5:00</span>
+                        <span class="text-[9px] text-gray-400 uppercase tracking-widest">PM</span>
+                    </div>
+
+                    <div class="mt-10 px-2">
+                        <p class="text-[9px] tracking-[4px] text-amber-600 font-bold mb-1 uppercase">Reception</p>
+                        <h3 class="text-xl font-medium text-gray-800 tracking-tight">The Grand Ballroom</h3>
+                        <p class="text-gray-500 text-sm mt-2 font-light">456 Venue Avenue, South District</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer - Integrated -->
+    <hr class="border-gray-100 my-10">
+    <div class="grid md:grid-cols-3 gap-10 text-center pb-8">
+        <div>
+            <div class="text-2xl font-medium tracking-wide text-gray-900 mb-2">Jessica & Kelvin</div>
+            <p class="text-gray-400 text-sm tracking-wide">May 19, 2026</p>
+        </div>
+        <div>
+            <p class="text-gray-400 text-xs tracking-[2px] uppercase mb-4">Follow Our Journey</p>
+            <div class="flex justify-center gap-6">
+                <a href="#" class="text-gray-400 hover:text-amber-400 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-amber-400 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+        <div>
+            <p class="text-gray-400 text-xs tracking-[2px] uppercase mb-4">Contact Us</p>
+            <p class="text-gray-500 text-sm">hello@jessicaandkelvin.com</p>
+        </div>
+    </div>
+    <div class="border-t border-gray-100 pt-6 text-center pb-4">
+        <p class="text-gray-400 text-xs tracking-wide">Â© 2026 Jessica & Kelvin. Made with love.</p>
+    </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Page switching function
+        function toggleMobileMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); } function showPage(pageId) {
+            event.preventDefault();
+
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+
+            // Reinitialize swiper when photos page is shown
+            if (pageId === 'photos') {
+                setTimeout(() => {
+                    if (typeof Swiper !== 'undefined') {
+                        const swiperEl = document.querySelector('.bg-slider');
+                        if (swiperEl && swiperEl.swiper) {
+                            swiperEl.swiper.update();
+                        } else {
+                            new Swiper('.bg-slider', {
+                                effect: 'fade',
+                                autoplay: { delay: 5000, disableOnInteraction: false },
+                                loop: true,
+                                speed: 2500,
+                            });
+                        }
+                    }
+                }, 100);
+            }
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Initialize swiper on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const swiper = new Swiper('.bg-slider', {
+                effect: 'fade',
+                autoplay: { delay: 5000, disableOnInteraction: false },
+                loop: true,
+                speed: 2500,
+            });
+        });
+    </script>
+</body>
+
+</html>
